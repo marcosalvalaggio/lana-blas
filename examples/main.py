@@ -1,0 +1,19 @@
+import time 
+import matrix_extension
+import numpy as np
+
+# lab
+s = time.monotonic()
+result = matrix_extension.multiply_matrices(2000)
+e = time.monotonic()
+t = e - s
+print(f"matmul: {t:.2f} sec.")
+
+# numpy 
+a = np.eye(2000)
+b = np.eye(2000)
+s = time.monotonic()
+result = a @ b
+e = time.monotonic()
+t = e - s
+print(f"numpy matmul: {t:.2f} sec.")
