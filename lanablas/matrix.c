@@ -27,6 +27,7 @@ static PyObject* multiply_matrices(PyObject* self, PyObject* args) {
 
     // Create a Python list to store the resultant matrix C
     PyObject* result = PyList_New(n);
+    
     for (int i = 0; i < n; i++) {
         PyObject* row = PyList_New(n);
         for (int j = 0; j < n; j++) {
