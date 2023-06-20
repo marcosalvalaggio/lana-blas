@@ -54,12 +54,23 @@ static PyMethodDef MatrixExtensionMethods[] = {
 
 static struct PyModuleDef matrix_extension_module = {
     PyModuleDef_HEAD_INIT,
-    "matrix_extension",
-    NULL,
+    "lanablas.matrix",
+    "Extension module for matrix multiplication using BLAS",
     -1,
-    MatrixExtensionMethods
+    MatrixExtensionMethods,
+    NULL,
+    NULL,
+    NULL,
+    NULL
 };
 
-PyMODINIT_FUNC PyInit_matrix_extension(void) {
-    return PyModule_Create(&matrix_extension_module);
+PyMODINIT_FUNC PyInit_matrix(void) {
+    
+    PyObject *m;
+    m = PyModule_Create(&matrix_extension_module);
+    if (m == NULL) {
+        return NULL;
+    }
+
+    return m;
 }

@@ -1,10 +1,10 @@
 import time 
-import matrix_extension
+import lanablas as lb
 import numpy as np
 
 # lab
 s = time.monotonic()
-result = matrix_extension.multiply_matrices(2000)
+result = lb.multiply_matrices(2000)
 e = time.monotonic()
 t = e - s
 print(f"matmul: {t:.2f} sec.")
