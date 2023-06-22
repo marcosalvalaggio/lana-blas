@@ -38,6 +38,43 @@ static PyObject* Matrix_zeros(PyTypeObject* type, PyObject* args) {
 }
 
 
+static PyObject* Matrix_ones(PyTypeObject* type, PyObject* args) {
+    
+    int rows, cols;
+    if (!PyArg_ParseTuple(args, "ii", &rows, &cols)) {
+        PyErr_SetString(PyExc_TypeError, "Invalid arguments");
+        return NULL;
+    }
+
+    MatrixObject* matrix = (MatrixObject*)type->tp_alloc(type, 0);
+    if (matrix == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "Failed to allocate memory for matrix");
+        return NULL;
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+    matrix->data = malloc(rows * sizeof(double*));
+    for (int i = 0; i < rows; i++) {
+        matrix->data[i] = malloc(cols * sizeof(double));
+        for (int j = 0; j < cols; j++) {
+            matrix->data[i][j] = 1.0;
+        }
+    }
+
+    return (PyObject*)matrix;
+}
+
+static PyObject* Matrix_shape(MatrixObject* self) {
+    PyObject* shape = PyTuple_New(2);
+    PyObject* rows = PyLong_FromLong(self->rows);
+    PyObject* cols = PyLong_FromLong(self->cols);
+    PyTuple_SetItem(shape, 0, rows);
+    PyTuple_SetItem(shape, 1, cols);
+    return shape;
+}
+
+
 static void Matrix_dealloc(MatrixObject* self) {
     for (int i = 0; i < self->rows; i++) {
         free(self->data[i]);
@@ -49,7 +86,14 @@ static void Matrix_dealloc(MatrixObject* self) {
 
 static PyMethodDef MatrixExtensionMethods[] = {
     {"zeros", (PyCFunction)Matrix_zeros, METH_VARARGS | METH_CLASS, "Create a matrix of zeros"},
+    {"ones", (PyCFunction)Matrix_ones, METH_VARARGS | METH_CLASS, "Create a matrix of ones"},
     {NULL, NULL, 0, NULL}
+};
+
+
+static PyGetSetDef Matrix_getsetters[] = {
+    {"shape", (getter)Matrix_shape, NULL, "Return the shape of the matrix as a tuple", NULL},
+    {NULL}
 };
 
 
@@ -91,6 +135,7 @@ static PyTypeObject MatrixType = {
     .tp_dealloc = (destructor)Matrix_dealloc,
     .tp_repr = (reprfunc)Matrix_repr,
     .tp_methods = MatrixExtensionMethods,
+    .tp_getset = Matrix_getsetters,
 };
 
 
