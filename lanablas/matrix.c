@@ -1,6 +1,47 @@
 #include <Python.h>
 #include <cblas.h>
 
+
+typedef struct {
+    PyObject_HEAD
+    int rows;
+    int cols;
+    double* data;
+} MatrixObject;
+
+
+static PyObject* Matrix_zeros(PyTypeObject* type, PyObject* args) {
+    
+    int rows, cols;
+    if (!PyArg_ParseTuple(args, "ii", &rows, &cols)) {
+        PyErr_SetString(PyExc_TypeError, "Invalid arguments");
+        return NULL;
+    }
+
+    MatrixObject* matrix = (MatrixObject*)type->tp_alloc(type, 0);
+    if (matrix == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "Failed to allocate memory for matrix");
+        return NULL;
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+    matrix->data = malloc(rows * sizeof(double *));
+    for (int i=0; i<rows; i++) {
+        matrix->data[i] = malloc(cols * sizeof(double));
+    }
+    // access the matrix and populate
+    for (int i=0; i<rows; i++) {
+        for (int j=0; j<cols; j++){
+        matrix->data[i][j] = 0.0;
+        }
+    }
+
+
+    return (PyObject*)matrix;
+
+}
+
 static PyObject* multiply_matrices(PyObject* self, PyObject* args) {
     // Parse the arguments
     int n;
