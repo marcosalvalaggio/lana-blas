@@ -97,6 +97,7 @@ static PyObject* Matrix_eye(PyTypeObject* type, PyObject* args) {
     return (PyObject*)matrix;
 }
 
+
 static PyObject* Matrix_shape(MatrixObject* self) {
     PyObject* shape = PyTuple_New(2);
     PyObject* rows = PyLong_FromLong(self->rows);
@@ -154,7 +155,6 @@ static PyObject* Matrix_repr(MatrixObject* self) {
     }
     return result;
 }
-
 
 
 static PyTypeObject MatrixType = {
