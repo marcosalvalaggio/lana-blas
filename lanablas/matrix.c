@@ -89,30 +89,49 @@ static PyObject* multiply_matrices(PyObject* self, PyObject* args) {
 
 
 static PyMethodDef MatrixExtensionMethods[] = {
-    {"multiply_matrices", multiply_matrices, METH_VARARGS, "Multiply two matrices using BLAS"},
+    {"zeros", (PyCFunction)Matrix_zeros, METH_VARARGS | METH_CLASS, "Create a matrix of zeros"},
+    //{"multiply_matrices", multiply_matrices, METH_VARARGS, "Multiply two matrices using BLAS"},
     {NULL, NULL, 0, NULL}
 };
 
 
+static void Matrix_dealloc(MatrixObject* self) {
+    free(self->data);
+    Py_TYPE(self)->tp_free((PyObject*)self);
+}
+
+
+static PyTypeObject MatrixType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "Matrix",
+    .tp_doc = "Matrix object",
+    .tp_basicsize = sizeof(MatrixObject),
+    .tp_itemsize = 0,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_new = PyType_GenericNew,
+    .tp_dealloc = (destructor)Matrix_dealloc,
+    .tp_methods = MatrixExtensionMethods,
+};
+
 static struct PyModuleDef matrix_extension_module = {
     PyModuleDef_HEAD_INIT,
-    "lanablas.matrix",
-    "Extension module for matrix multiplication using BLAS",
-    -1,
-    MatrixExtensionMethods,
-    NULL,
-    NULL,
-    NULL,
-    NULL
+    .m_name = "lanablas.matrix",
+    .m_doc = "Extension module for matrix operations using BLAS",
+    .m_size = -1,
 };
 
 PyMODINIT_FUNC PyInit_matrix(void) {
     
-    PyObject *m;
-    m = PyModule_Create(&matrix_extension_module);
-    if (m == NULL) {
+    PyObject* m;
+    if (PyType_Ready(&MatrixType) < 0)
         return NULL;
-    }
 
+    m = PyModule_Create(&matrix_extension_module);
+    if (m == NULL)
+        return NULL;
+
+    Py_INCREF(&MatrixType);
+    PyModule_AddObject(m, "Matrix", (PyObject*)&MatrixType);
     return m;
+    
 }
