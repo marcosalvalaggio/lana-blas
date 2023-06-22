@@ -53,6 +53,33 @@ static PyMethodDef MatrixExtensionMethods[] = {
 };
 
 
+static PyObject* Matrix_repr(MatrixObject* self) {
+    PyObject* result = PyUnicode_New(0, 0);
+    for (int i = 0; i < self->rows; i++) {
+        if (i == 0) {
+            PyUnicode_AppendAndDel(&result, PyUnicode_FromString("Matrix(["));
+        }
+        PyUnicode_AppendAndDel(&result, PyUnicode_FromString("["));
+        for (int j = 0; j < self->cols; j++) {
+            if (j != 0) {
+                PyUnicode_AppendAndDel(&result, PyUnicode_FromString(", "));
+            }
+            PyObject* value = PyFloat_FromDouble(self->data[i][j]);
+            PyUnicode_AppendAndDel(&result, PyObject_Str(value));
+            Py_DECREF(value);
+        }
+        PyUnicode_AppendAndDel(&result, PyUnicode_FromString("]"));
+        if (i != self->rows - 1) {
+            PyUnicode_AppendAndDel(&result, PyUnicode_FromString(",\n       "));
+        } else {
+            PyUnicode_AppendAndDel(&result, PyUnicode_FromString("])"));
+        }
+    }
+    return result;
+}
+
+
+
 static PyTypeObject MatrixType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "Matrix",
@@ -62,6 +89,7 @@ static PyTypeObject MatrixType = {
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_new = PyType_GenericNew,
     .tp_dealloc = (destructor)Matrix_dealloc,
+    .tp_repr = (reprfunc)Matrix_repr,
     .tp_methods = MatrixExtensionMethods,
 };
 
