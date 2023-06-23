@@ -13,6 +13,18 @@
 Actually, the package is currently only available for macOS x86. Wheels for ARM and Linux platforms will be added to the PyPI registry as soon as possible.
 
 ```console
-pip install lanablas==0.0.2
+pip install lanablas==0.0.3
 ```
+
+## Example 
+
+```python
+from lanablas import Matrix
+
+zeros = Matrix.zeros(3,3)
+print(zeros)
+print(type(zeros), zeros.shape)
+```
+
+For more comprehensive examples, please visit the [examples](https://github.com/marcosalvalaggio/lana-blas/tree/main/examples) folder
 
