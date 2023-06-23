@@ -13,6 +13,6 @@
 Actually, the package is currently only available for macOS x86. Wheels for ARM and Linux platforms will be added to the PyPI registry as soon as possible.
 
 ```console
-pip install lanablas
+pip install lanablas==0.0.2
 ```
 
