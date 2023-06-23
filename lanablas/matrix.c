@@ -108,6 +108,20 @@ static PyObject* Matrix_shape(MatrixObject* self) {
 }
 
 
+static PyObject* Matrix_to_list(MatrixObject* self) {
+    PyObject* result = PyList_New(self->rows);
+    for (int i = 0; i < self->rows; i++) {
+        PyObject* row = PyList_New(self->cols);
+        for (int j = 0; j < self->cols; j++) {
+            PyObject* value = PyFloat_FromDouble(self->data[i][j]);
+            PyList_SetItem(row, j, value);
+        }
+        PyList_SetItem(result, i, row);
+    }
+    return result;
+}
+
+
 static void Matrix_dealloc(MatrixObject* self) {
     for (int i = 0; i < self->rows; i++) {
         free(self->data[i]);
@@ -121,6 +135,7 @@ static PyMethodDef MatrixExtensionMethods[] = {
     {"zeros", (PyCFunction)Matrix_zeros, METH_VARARGS | METH_CLASS, "Create a matrix of zeros"},
     {"ones", (PyCFunction)Matrix_ones, METH_VARARGS | METH_CLASS, "Create a matrix of ones"},
     {"eye", (PyCFunction)Matrix_eye, METH_VARARGS | METH_CLASS, "Create an identity matrix"},
+    {"to_list", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert the matrix to a list of lists"},
     {NULL, NULL, 0, NULL}
 };
 
