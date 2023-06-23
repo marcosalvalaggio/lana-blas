@@ -138,6 +138,44 @@ static PyObject* Matrix_eye(PyTypeObject* type, PyObject* args) {
 }
 
 
+static PyObject* Matrix_fill(PyTypeObject* type, PyObject* args) {
+    
+    PyObject* sizeTuple;
+    double fill_value;
+
+    if (!PyArg_ParseTuple(args, "Od", &sizeTuple, &fill_value)) {
+        PyErr_SetString(PyExc_TypeError, "Invalid arguments: (rows, cols), fill_value");
+        return NULL;
+    }
+
+    int rows, cols;
+    if (!PyArg_ParseTuple(sizeTuple, "ii", &rows, &cols)) {
+        PyErr_SetString(PyExc_TypeError, "Invalid size tuple: (rows, cols)");
+        return NULL;
+    }
+
+    MatrixObject* matrix = (MatrixObject*)type->tp_alloc(type, 0);
+    if (matrix == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "Failed to allocate memory for matrix");
+        return NULL;
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+    matrix->data = malloc(rows * sizeof(double*));
+    for (int i = 0; i < rows; i++) {
+        matrix->data[i] = malloc(cols * sizeof(double));
+        for (int j = 0; j < cols; j++) {
+            matrix->data[i][j] = fill_value;
+        }
+    }
+
+    return (PyObject*)matrix;
+
+}
+
+
+
 static PyObject* Matrix_shape(MatrixObject* self) {
     PyObject* shape = PyTuple_New(2);
     PyObject* rows = PyLong_FromLong(self->rows);
@@ -176,6 +214,7 @@ static PyMethodDef MatrixExtensionMethods[] = {
     {"ones", (PyCFunction)Matrix_ones, METH_VARARGS | METH_CLASS, "Create a matrix of ones"},
     {"eye", (PyCFunction)Matrix_eye, METH_VARARGS | METH_CLASS, "Create an identity matrix"},
     {"new", (PyCFunction)Matrix_new, METH_VARARGS | METH_CLASS, "Create a matrix from a Python list"},
+    {"fill", (PyCFunction)Matrix_fill, METH_VARARGS | METH_CLASS, "Fill the matrix with a specified value"},
     {"to_list", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert the matrix to a list of lists"},
     {NULL, NULL, 0, NULL}
 };
