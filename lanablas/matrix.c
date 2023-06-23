@@ -10,6 +10,46 @@ typedef struct {
 } MatrixObject;
 
 
+static PyObject* Matrix_new(PyTypeObject* type, PyObject* args) {
+
+    PyObject* pyList;
+    if (!PyArg_ParseTuple(args, "O", &pyList)) {
+        PyErr_SetString(PyExc_TypeError, "Invalid argument: expected a list");
+        return NULL;
+    }
+
+    if (!PyList_Check(pyList)) {
+        PyErr_SetString(PyExc_TypeError, "Invalid argument: expected a list");
+        return NULL;
+    }
+
+    int rows = PyList_Size(pyList);
+    int cols = PyList_Size(PyList_GetItem(pyList, 0));
+
+    MatrixObject* matrix = (MatrixObject*)type->tp_alloc(type, 0);
+    if (matrix == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "Failed to allocate memory for matrix");
+        return NULL;
+    }
+
+    matrix->rows = rows;
+    matrix->cols = cols;
+    matrix->data = malloc(rows * sizeof(double*));
+
+    for (int i = 0; i < rows; i++) {
+        matrix->data[i] = malloc(cols * sizeof(double));
+        PyObject* row = PyList_GetItem(pyList, i);
+
+        for (int j = 0; j < cols; j++) {
+            PyObject* value = PyList_GetItem(row, j);
+            matrix->data[i][j] = PyFloat_AsDouble(value);
+        }
+    }
+
+    return (PyObject*)matrix;
+}
+
+
 static PyObject* Matrix_zeros(PyTypeObject* type, PyObject* args) {
     
     int rows, cols;
@@ -135,6 +175,7 @@ static PyMethodDef MatrixExtensionMethods[] = {
     {"zeros", (PyCFunction)Matrix_zeros, METH_VARARGS | METH_CLASS, "Create a matrix of zeros"},
     {"ones", (PyCFunction)Matrix_ones, METH_VARARGS | METH_CLASS, "Create a matrix of ones"},
     {"eye", (PyCFunction)Matrix_eye, METH_VARARGS | METH_CLASS, "Create an identity matrix"},
+    {"new", (PyCFunction)Matrix_new, METH_VARARGS | METH_CLASS, "Create a matrix from a Python list"},
     {"to_list", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert the matrix to a list of lists"},
     {NULL, NULL, 0, NULL}
 };
