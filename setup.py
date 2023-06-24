@@ -18,7 +18,7 @@ module_extension = Extension(
 
 setup(
 name='lanablas',
-    version='0.0.4',
+    version='0.0.5',
     description='Extension module for matrix multiplication',
     author='Marco Salvalaggio',
     author_email='mar.salvalaggio@gmail.com',

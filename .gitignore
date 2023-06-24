@@ -4,3 +4,4 @@ dist/
 lanablas.egg-info/
 __pycache__/
 lab.py
+.vscode/
