@@ -9,6 +9,7 @@ typedef struct {
     double** data;
 } MatrixObject;
 
+static PyTypeObject MatrixType;
 
 static PyObject* Matrix_new(PyTypeObject* type, PyObject* args) {
 
@@ -225,6 +226,85 @@ static PyGetSetDef Matrix_getsetters[] = {
 };
 
 
+PyObject * Matrix_add(PyObject *self, PyObject *other) {
+    // Cast the input objects to MatrixObject
+    MatrixObject* selfMatrix = (MatrixObject*)self;
+    MatrixObject* otherMatrix = (MatrixObject*)other;
+
+    // Check if the dimensions of the matrices are compatible for addition
+    if (selfMatrix->rows != otherMatrix->rows || selfMatrix->cols != otherMatrix->cols) {
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        return NULL;
+    }
+
+    // Create a new MatrixObject for the result
+    MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
+    if (result == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Failed to allocate memory for result matrix");
+        return NULL;
+    }
+
+    result->rows = selfMatrix->rows;
+    result->cols = selfMatrix->cols;
+    result->data = malloc(result->rows * sizeof(double*));
+    for (int i = 0; i < result->rows; i++) {
+        result->data[i] = malloc(result->cols * sizeof(double));
+        for (int j = 0; j < result->cols; j++) {
+            result->data[i][j] = selfMatrix->data[i][j] + otherMatrix->data[i][j];
+        }
+    }
+
+    return (PyObject*)result;
+    // Value *value = (Value *)Value_Type.tp_alloc(&Value_Type, 0);
+    // value->data = ((Value *)self)->data + ((Value *)other)->data;
+    // value->grad = 0.0;
+    // value->prev = PyTuple_Pack(2, self, other);
+    // value->op = PyUnicode_FromString("+");
+    // value->func_idx = 0;
+    // return (PyObject *)value;
+}
+
+
+PyNumberMethods Matrix_as_number = {
+    Matrix_add,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
+
+
+
 static PyObject* Matrix_repr(MatrixObject* self) {
     PyObject* result = PyUnicode_New(0, 0);
     for (int i = 0; i < self->rows; i++) {
@@ -251,48 +331,6 @@ static PyObject* Matrix_repr(MatrixObject* self) {
 }
 
 
-static PyObject* Matrix_add(MatrixObject* self, PyObject* args) {
-    
-    PyObject* obj;
-    if (!PyArg_ParseTuple(args, "O", &obj)) {
-        PyErr_SetString(PyExc_TypeError, "Invalid argument: expected a Matrix object");
-        return NULL;
-    }
-
-    // if (!PyObject_IsInstance(obj, (PyObject*)&MatrixType)) {
-    //     PyErr_SetString(PyExc_TypeError, "Invalid argument: expected a Matrix object");
-    //     return NULL;
-    // }
-
-    MatrixObject* other = (MatrixObject*)obj;
-
-    if (self->rows != other->rows || self->cols != other->cols) {
-        PyErr_SetString(PyExc_ValueError, "Matrix dimensions must match");
-        return NULL;
-    }
-
-    // MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
-    // if (result == NULL) {
-    //     PyErr_SetString(PyExc_RuntimeError, "Failed to allocate memory for result matrix");
-    //     return NULL;
-    // }
-
-    MatrixObject* matrix = (MatrixObject*)type->tp_alloc(type, 0);
-
-    result->rows = self->rows;
-    result->cols = self->cols;
-    result->data = malloc(result->rows * sizeof(double*));
-
-    for (int i = 0; i < result->rows; i++) {
-        result->data[i] = malloc(result->cols * sizeof(double));
-        cblas_dcopy(result->cols, self->data[i], 1, result->data[i], 1);
-        cblas_daxpy(result->cols, 1.0, other->data[i], 1, result->data[i], 1);
-    }
-
-    return (PyObject*)result;
-}
-
-
 static PyTypeObject MatrixType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "Matrix",
@@ -303,8 +341,7 @@ static PyTypeObject MatrixType = {
     .tp_new = PyType_GenericNew,
     .tp_dealloc = (destructor)Matrix_dealloc,
     .tp_repr = (reprfunc)Matrix_repr,
-    .tp_as_number = &(PyNumberMethods){
-        .nb_add = (binaryfunc)Matrix_add,},
+    .tp_as_number = &Matrix_as_number,
     .tp_methods = MatrixExtensionMethods,
     .tp_getset = Matrix_getsetters,
 };
