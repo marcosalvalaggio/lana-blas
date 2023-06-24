@@ -5,3 +5,4 @@ lanablas.egg-info/
 __pycache__/
 lab.py
 .vscode/
+.pytest_cache/
