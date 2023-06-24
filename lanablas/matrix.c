@@ -255,19 +255,46 @@ PyObject * Matrix_add(PyObject *self, PyObject *other) {
     }
 
     return (PyObject*)result;
-    // Value *value = (Value *)Value_Type.tp_alloc(&Value_Type, 0);
-    // value->data = ((Value *)self)->data + ((Value *)other)->data;
-    // value->grad = 0.0;
-    // value->prev = PyTuple_Pack(2, self, other);
-    // value->op = PyUnicode_FromString("+");
-    // value->func_idx = 0;
-    // return (PyObject *)value;
+
+}
+
+
+PyObject * Matrix_subtract(PyObject *self, PyObject *other) {
+    // Cast the input objects to MatrixObject
+    MatrixObject* selfMatrix = (MatrixObject*)self;
+    MatrixObject* otherMatrix = (MatrixObject*)other;
+
+    // Check if the dimensions of the matrices are compatible for addition
+    if (selfMatrix->rows != otherMatrix->rows || selfMatrix->cols != otherMatrix->cols) {
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        return NULL;
+    }
+
+    // Create a new MatrixObject for the result
+    MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
+    if (result == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Failed to allocate memory for result matrix");
+        return NULL;
+    }
+
+    result->rows = selfMatrix->rows;
+    result->cols = selfMatrix->cols;
+    result->data = malloc(result->rows * sizeof(double*));
+    for (int i = 0; i < result->rows; i++) {
+        result->data[i] = malloc(result->cols * sizeof(double));
+        for (int j = 0; j < result->cols; j++) {
+            result->data[i][j] = selfMatrix->data[i][j] - otherMatrix->data[i][j];
+        }
+    }
+
+    return (PyObject*)result;
+
 }
 
 
 PyNumberMethods Matrix_as_number = {
     Matrix_add,
-    0,
+    Matrix_subtract,
     0,
     0,
     0,
@@ -302,7 +329,6 @@ PyNumberMethods Matrix_as_number = {
     0,
     0,
 };
-
 
 
 static PyObject* Matrix_repr(MatrixObject* self) {
