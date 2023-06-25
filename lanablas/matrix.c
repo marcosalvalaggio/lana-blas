@@ -1,3 +1,8 @@
+//TODO - Matrix_mul
+//TODO - Matrix_negative
+//TODO - Matrix_pow
+//TODO - Matrix_matmul
+//TODO - Matrix_truediv
 #include <Python.h>
 #include <cblas.h>
 
