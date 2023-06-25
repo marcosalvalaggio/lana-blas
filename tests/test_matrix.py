@@ -9,14 +9,18 @@ class TestValue(unittest.TestCase):
         b = Matrix.eye(3)
         c = a + b
         d = c - a
+        e = d * d
+        f = -e
         # numpy 
         anp = np.eye(3)
         bnp = np.eye(3)
         cnp = anp + bnp
         dnp = cnp - anp
+        enp = dnp * dnp
+        fnp = -enp
         # test
-        res = d.to_list()
-        res_np = dnp.tolist()
+        res = f.to_list()
+        res_np = fnp.tolist()
         self.assertEqual(res, res_np)
 
 
