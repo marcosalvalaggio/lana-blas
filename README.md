@@ -1,6 +1,8 @@
 ## LanaBLAS 🐑
 
-[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) [![macOS](https://img.shields.io/badge/macos-compatible-brightgreen.svg)](https://github.com/your-repo) [![Windows](https://img.shields.io/badge/windows-not%20compatible-red.svg)](https://github.com/your-repo) [![Linux](https://img.shields.io/badge/linux-not%20compatible-red.svg)](https://github.com/your-repo) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo)
+[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) [![macOS](https://img.shields.io/badge/macos-compatible-brightgreen.svg)](https://github.com/your-repo) [![Windows](https://img.shields.io/badge/windows-not%20compatible-red.svg)](https://github.com/your-repo) [![Linux](https://img.shields.io/badge/linux-not%20compatible-red.svg)](https://github.com/your-repo) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo) [![PyPI - Status](https://img.shields.io/pypi/v/lanablas.svg)](https://pypi.org/project/lanablas/) [![Project Status](https://img.shields.io/badge/status-broken-red)](https://github.com/USER/REPO)
+
+
 
 
 **L***inear* **A**lgebra for **n***octurnal* *and* **a**dventurous *data scientists exploring **BLAS***
