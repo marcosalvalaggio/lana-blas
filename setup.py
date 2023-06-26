@@ -15,11 +15,12 @@ module_extension = Extension(
     library_dirs=['lanablas-0.1.1/lanablas/../openblas/lib'],
 )
 
-# Get the list of OpenBLAS library files
+
 openblas_lib_files = []
 for root, _, files in os.walk('openblas'):
     for file in files:
         openblas_lib_files.append(os.path.relpath(os.path.join(root, file), 'lanablas'))
+
 
 setup(
     name='lanablas',
