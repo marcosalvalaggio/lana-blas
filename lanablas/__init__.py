@@ -1,7 +1,7 @@
 from typing import Union, List
 from matrix import Matrix
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
 
 def inject(data: Union[float, int, List, List[List]]) -> List[List[float]]:

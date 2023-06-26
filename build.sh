@@ -12,4 +12,4 @@ if [ -d "lanablas.egg-info" ]; then
   rm -rf lanablas.egg-info
 fi
 
-python3 setup.py sdist bdist_wheel 
+python3 setup.py sdist bdist_wheel --universal
