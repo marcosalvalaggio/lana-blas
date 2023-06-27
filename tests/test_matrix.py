@@ -3,6 +3,7 @@ import numpy as np
 import unittest
 
 class TestValue(unittest.TestCase):
+
     def test_ops(self):
         # lanablas
         a = Matrix.eye(3)
@@ -21,6 +22,20 @@ class TestValue(unittest.TestCase):
         # test
         res = f.to_list()
         res_np = fnp.tolist()
+        self.assertEqual(res, res_np)
+
+    def test_ops_2(self):
+        # lanablas 
+        a = Matrix.fill((3,3),3)
+        b = a ** 2
+        c = b / a
+        res = c.to_list()
+        # numpy 
+        a = np.full((3,3),3)
+        b = a ** 2
+        c = b / a
+        res_np = c.tolist()
+        # test 
         self.assertEqual(res, res_np)
 
 
