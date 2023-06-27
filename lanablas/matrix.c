@@ -3,6 +3,7 @@
 //TODO - Matrix_truediv
 #include <Python.h>
 #include <cblas.h>
+#include <math.h>
 
 
 typedef struct {
@@ -229,7 +230,7 @@ static PyGetSetDef Matrix_getsetters[] = {
 };
 
 
-PyObject * Matrix_add(PyObject *self, PyObject *other) {
+PyObject* Matrix_add(PyObject *self, PyObject *other) {
     // Cast the input objects to MatrixObject
     MatrixObject* selfMatrix = (MatrixObject*)self;
     MatrixObject* otherMatrix = (MatrixObject*)other;
@@ -262,7 +263,7 @@ PyObject * Matrix_add(PyObject *self, PyObject *other) {
 }
 
 
-PyObject * Matrix_subtract(PyObject *self, PyObject *other) {
+PyObject* Matrix_subtract(PyObject *self, PyObject *other) {
     // Cast the input objects to MatrixObject
     MatrixObject* selfMatrix = (MatrixObject*)self;
     MatrixObject* otherMatrix = (MatrixObject*)other;
@@ -295,7 +296,7 @@ PyObject * Matrix_subtract(PyObject *self, PyObject *other) {
 }
 
 
-PyObject * Matrix_mul(PyObject *self, PyObject *other) {
+PyObject* Matrix_mul(PyObject *self, PyObject *other) {
     // Cast the input objects to MatrixObject
     MatrixObject* selfMatrix = (MatrixObject*)self;
     MatrixObject* otherMatrix = (MatrixObject*)other;
@@ -328,7 +329,7 @@ PyObject * Matrix_mul(PyObject *self, PyObject *other) {
 }
 
 
-PyObject * Matrix_negative(PyObject *self) {
+PyObject* Matrix_negative(PyObject *self) {
     // Cast the input objects to MatrixObject
     MatrixObject* selfMatrix = (MatrixObject*)self;
 
@@ -354,13 +355,71 @@ PyObject * Matrix_negative(PyObject *self) {
 }
 
 
+PyObject* Matrix_truediv(PyObject *self, PyObject *other) {
+    // Cast the input objects to MatrixObject
+    MatrixObject* selfMatrix = (MatrixObject*)self;
+    MatrixObject* otherMatrix = (MatrixObject*)other;
+
+    // Check if the dimensions of the matrices are compatible for addition
+    if (selfMatrix->rows != otherMatrix->rows || selfMatrix->cols != otherMatrix->cols) {
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        return NULL;
+    }
+
+    // Create a new MatrixObject for the result
+    MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
+    if (result == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Failed to allocate memory for result matrix");
+        return NULL;
+    }
+
+    result->rows = selfMatrix->rows;
+    result->cols = selfMatrix->cols;
+    result->data = malloc(result->rows * sizeof(double*));
+    for (int i = 0; i < result->rows; i++) {
+        result->data[i] = malloc(result->cols * sizeof(double));
+        for (int j = 0; j < result->cols; j++) {
+            result->data[i][j] = selfMatrix->data[i][j] / otherMatrix->data[i][j];
+        }
+    }
+
+    return (PyObject*)result;
+
+}
+
+
+PyObject* Matrix_pow(PyObject *self, PyObject *other, PyObject *arg) {
+    // Cast the input objects to MatrixObject
+    MatrixObject* selfMatrix = (MatrixObject*)self;
+
+    // Create a new MatrixObject for the result
+    MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
+    if (result == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "Failed to allocate memory for result matrix");
+        return NULL;
+    }
+
+    result->rows = selfMatrix->rows;
+    result->cols = selfMatrix->cols;
+    result->data = malloc(result->rows * sizeof(double*));
+    for (int i = 0; i < result->rows; i++) {
+        result->data[i] = malloc(result->cols * sizeof(double));
+        for (int j = 0; j < result->cols; j++) {
+            result->data[i][j] = pow(selfMatrix->data[i][j], PyFloat_AsDouble(other));
+        }
+    }
+
+    return (PyObject*)result;
+}
+
+
 PyNumberMethods Matrix_as_number = {
     Matrix_add,
     Matrix_subtract,
     Matrix_mul,
     0,
     0,
-    0,
+    Matrix_pow,
     Matrix_negative,
     0,
     0,
@@ -385,7 +444,7 @@ PyNumberMethods Matrix_as_number = {
     0,
     0,
     0,
-    0,
+    Matrix_truediv,
     0,
     0,
     0,
