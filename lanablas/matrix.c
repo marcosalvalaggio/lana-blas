@@ -143,7 +143,7 @@ static PyObject* Matrix_eye(PyTypeObject* type, PyObject* args) {
 }
 
 
-static PyObject* Matrix_fill(PyTypeObject* type, PyObject* args) {
+static PyObject* Matrix_full(PyTypeObject* type, PyObject* args) {
     
     PyObject* sizeTuple;
     double fill_value;
@@ -218,8 +218,8 @@ static PyMethodDef MatrixExtensionMethods[] = {
     {"ones", (PyCFunction)Matrix_ones, METH_VARARGS | METH_CLASS, "Create a matrix of ones"},
     {"eye", (PyCFunction)Matrix_eye, METH_VARARGS | METH_CLASS, "Create an identity matrix"},
     {"new", (PyCFunction)Matrix_new, METH_VARARGS | METH_CLASS, "Create a matrix from a Python list"},
-    {"fill", (PyCFunction)Matrix_fill, METH_VARARGS | METH_CLASS, "Fill the matrix with a specified value"},
-    {"to_list", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert the matrix to a list of lists"},
+    {"full", (PyCFunction)Matrix_full, METH_VARARGS | METH_CLASS, "Fill the matrix with a specified value"},
+    {"tolist", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert the matrix to a list of lists"},
     {NULL, NULL, 0, NULL}
 };
 
