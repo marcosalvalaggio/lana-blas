@@ -20,16 +20,16 @@ class TestValue(unittest.TestCase):
         enp = dnp * dnp
         fnp = -enp
         # test
-        res = f.to_list()
+        res = f.tolist()
         res_np = fnp.tolist()
         self.assertEqual(res, res_np)
 
     def test_ops_2(self):
         # lanablas 
-        a = Matrix.fill((3,3),3)
+        a = Matrix.full((3,3),3)
         b = a ** 2
         c = b / a
-        res = c.to_list()
+        res = c.tolist()
         # numpy 
         a = np.full((3,3),3)
         b = a ** 2
