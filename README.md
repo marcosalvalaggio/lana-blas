@@ -13,8 +13,6 @@
 
 ## Install 
 
-Actually, the package is currently only available for macOS x86. Wheels for ARM and Linux platforms will be added to the PyPI registry as soon as possible.
-
 ```console
 pip install lanablas==0.1.5
 ```
@@ -22,7 +20,7 @@ pip install lanablas==0.1.5
 ## Example 
 
 ```python
-from lanablas import Matrix
+from lanablas import Matrix, inject
 
 a = Matrix.ones(3,3)
 print(a)
@@ -35,6 +33,13 @@ print(type(b), b.shape)
 c = a + b
 print(c)
 print(type(c), b.shape)
+
+for row in c.tolist():
+    print(row, type(row))
+
+# sub-matrix
+d = Matrix.new(inject(c.tolist()[0]))
+print(type(d), d.shape)
 ```
 
 For more comprehensive examples, please visit the [examples](https://github.com/marcosalvalaggio/lana-blas/tree/main/examples) folder
