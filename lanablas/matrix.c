@@ -413,11 +413,6 @@ PyObject* Matrix_pow(PyObject *self, PyObject *other, PyObject *arg) {
 }
 
 
-void multiply_matrices(double *A, double *B, double *C, int m, int n, int k) {
-    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, k, n, 1.0, A, n, B, k, 0.0, C, k);
-}
-
-
 PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
     // Cast the input objects to MatrixObject
     MatrixObject* selfMatrix = (MatrixObject*)self;
@@ -451,7 +446,7 @@ PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
 
     double *C = (double *)malloc(m * k * sizeof(double)); // Resultant matrix
 
-    multiply_matrices(A, B, C, m, n, k);
+    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, k, n, 1.0, A, n, B, k, 0.0, C, k);
 
     // Create a new MatrixObject for the result
     MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
@@ -475,16 +470,14 @@ PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
 }
 
 
-
 PyNumberMethods Matrix_as_number = {
     Matrix_add,
     Matrix_subtract,
     Matrix_mul,
     0,
-    0,
+    0, 
     Matrix_pow,
     Matrix_negative,
-    0,
     0,
     0,
     0,
@@ -511,8 +504,8 @@ PyNumberMethods Matrix_as_number = {
     0,
     0,
     Matrix_matmul,
-    0,
 };
+
 
 
 static PyObject* Matrix_repr(MatrixObject* self) {
