@@ -258,6 +258,7 @@ static PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
     result->data = malloc(result->rows * sizeof(double*));
 
     for (int i = 0; i < m; i++) {
+        result->data[i] = malloc(result->cols * sizeof(double));
         for (int j = 0; j < k; j++) {
             result->data[i][j] = C[i * k + j];
         }
