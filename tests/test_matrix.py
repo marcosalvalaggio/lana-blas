@@ -39,3 +39,18 @@ class TestValue(unittest.TestCase):
         self.assertEqual(res, res_np)
 
 
+    def test_matmul(self):
+        # lanablas
+        a = Matrix.full((2,3),1)
+        b = Matrix.full((3,5),2)
+        c = a @ b
+        res = c.tolist()
+        # numpy 
+        a = np.full((2,3),fill_value=1.0)
+        b = np.full((3,5),fill_value=2.0)
+        c = a @ b
+        res_np = c.tolist()
+        # test
+        self.assertEqual(res, res_np)
+
+
