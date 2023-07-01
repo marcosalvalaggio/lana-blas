@@ -43,7 +43,7 @@ class TestValue(unittest.TestCase):
         # lanablas
         a = Matrix.full((2,3),1)
         b = Matrix.full((3,5),2)
-        c = a @ b
+        c = a.__matmul__(b)
         res = c.tolist()
         # numpy 
         a = np.full((2,3),fill_value=1.0)
