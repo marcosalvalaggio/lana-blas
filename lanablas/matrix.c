@@ -211,10 +211,10 @@ static void Matrix_dealloc(MatrixObject* self) {
 }
 
 
-static PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
+static PyObject* Matrix_matmul(MatrixObject *selfMatrix, MatrixObject *otherMatrix) {
     // Cast the input objects to MatrixObject
-    MatrixObject* selfMatrix = (MatrixObject*)self;
-    MatrixObject* otherMatrix = (MatrixObject*)other;
+    // MatrixObject* selfMatrix = (MatrixObject*)self;
+    // MatrixObject* otherMatrix = (MatrixObject*)other;
 
     // Check if the dimensions of the matrices are compatible for addition
     if (selfMatrix->cols != otherMatrix->rows) {
@@ -280,7 +280,7 @@ static PyMethodDef MatrixExtensionMethods[] = {
     {"new", (PyCFunction)Matrix_new, METH_VARARGS | METH_CLASS, "Create a matrix from a Python list"},
     {"full", (PyCFunction)Matrix_full, METH_VARARGS | METH_CLASS, "Fill the matrix with a specified value"},
     {"tolist", (PyCFunction)Matrix_to_list, METH_NOARGS, "Convert the matrix to a list of lists"},
-    {"__matmul__", (PyCFunction)Matrix_matmul, METH_O, "Matrix multiplication"},
+    {"matmul", (PyCFunction)Matrix_matmul, METH_O, "Matrix multiplication"},
     {NULL, NULL, 0, NULL}
 };
 
@@ -474,67 +474,6 @@ PyObject* Matrix_pow(PyObject *self, PyObject *other, PyObject *arg) {
 }
 
 
-PyObject* Matrix_matrix_matmul(PyObject *self, PyObject *other) {
-    // Cast the input objects to MatrixObject
-    MatrixObject* selfMatrix = (MatrixObject*)self;
-    MatrixObject* otherMatrix = (MatrixObject*)other;
-
-    // Check if the dimensions of the matrices are compatible for addition
-    if (selfMatrix->cols != otherMatrix->rows) {
-        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for matmul");
-        return NULL;
-    }
-
-    // init matricies
-    int m = selfMatrix->rows; // Number of rows in A
-    int n = selfMatrix->cols; // Number of columns in A and rows in B
-    int k = otherMatrix->cols; // Number of columns in B
-
-    double *A = (double *)malloc(m * n * sizeof(double)); // Matrix A
-    // Initialize matrix A
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            A[i * n + j] = selfMatrix->data[i][j];
-        }
-    }
-
-    double *B = (double *)malloc(n * k * sizeof(double)); // Matrix B
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < k; j++) {
-            B[i * k + j] = otherMatrix->data[i][j]; 
-        }
-    }
-
-    double *C = (double *)malloc(m * k * sizeof(double)); // Resultant matrix
-
-    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, k, n, 1.0, A, n, B, k, 0.0, C, k);
-
-    // Create a new MatrixObject for the result
-    MatrixObject* result = (MatrixObject*)MatrixType.tp_alloc(&MatrixType, 0);
-    if (result == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "Failed to allocate memory for result matrix");
-        return NULL;
-    }
-
-    result->rows = selfMatrix->rows;
-    result->cols = otherMatrix->cols;
-    result->data = malloc(result->rows * sizeof(double*));
-
-    for (int i = 0; i < m; i++) {
-        result->data[i] = malloc(result->cols * sizeof(double));
-        for (int j = 0; j < k; j++) {
-            result->data[i][j] = C[i * k + j];
-        }
-    }
-
-    free(A);
-    free(B);
-    free(C);
-
-    return (PyObject*)result;
-
-}
-
 PyNumberMethods Matrix_as_number = {
     Matrix_add,
     Matrix_subtract,
@@ -569,7 +508,7 @@ PyNumberMethods Matrix_as_number = {
     Matrix_truediv, 
     0,
     0,
-    Matrix_matrix_matmul,
+    0,
     0,
 };
 
