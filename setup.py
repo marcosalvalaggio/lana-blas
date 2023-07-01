@@ -23,7 +23,7 @@ for root, _, files in os.walk('openblas'):
 
 setup(
     name='lanablas',
-    version='0.1.5',
+    version='0.1.6',
     description='Extension module for matrix multiplication',
     author='Marco Salvalaggio',
     author_email='mar.salvalaggio@gmail.com',

@@ -14,7 +14,7 @@
 ## Install 
 
 ```console
-pip install lanablas==0.1.5
+pip install lanablas==0.1.6
 ```
 
 ## Example 
