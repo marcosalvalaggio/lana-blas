@@ -218,7 +218,7 @@ static PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
 
     // Check if the dimensions of the matrices are compatible for addition
     if (selfMatrix->cols != otherMatrix->rows) {
-        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for matmul");
         return NULL;
     }
 
@@ -262,6 +262,10 @@ static PyObject* Matrix_matmul(PyObject *self, PyObject *other) {
             result->data[i][j] = C[i * k + j];
         }
     }
+
+    free(A);
+    free(B);
+    free(C);
 
     return (PyObject*)result;
 
@@ -326,7 +330,7 @@ PyObject* Matrix_subtract(PyObject *self, PyObject *other) {
 
     // Check if the dimensions of the matrices are compatible for addition
     if (selfMatrix->rows != otherMatrix->rows || selfMatrix->cols != otherMatrix->cols) {
-        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for subtracr");
         return NULL;
     }
 
@@ -359,7 +363,7 @@ PyObject* Matrix_mul(PyObject *self, PyObject *other) {
 
     // Check if the dimensions of the matrices are compatible for addition
     if (selfMatrix->rows != otherMatrix->rows || selfMatrix->cols != otherMatrix->cols) {
-        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for mul");
         return NULL;
     }
 
@@ -418,7 +422,7 @@ PyObject* Matrix_truediv(PyObject *self, PyObject *other) {
 
     // Check if the dimensions of the matrices are compatible for addition
     if (selfMatrix->rows != otherMatrix->rows || selfMatrix->cols != otherMatrix->cols) {
-        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for addition");
+        PyErr_SetString(PyExc_ValueError, "Matrix dimensions are not compatible for truediv");
         return NULL;
     }
 
