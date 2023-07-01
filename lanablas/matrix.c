@@ -502,8 +502,8 @@ PyNumberMethods Matrix_as_number = {
     Matrix_truediv,
     0,
     0,
-    0,
     Matrix_matmul,
+    0,
 };
 
 
