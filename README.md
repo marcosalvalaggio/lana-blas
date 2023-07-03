@@ -3,8 +3,6 @@
 [![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo)
 
 
-
-
 **L***inear* **A**lgebra for **n***octurnal* *and* **a**dventurous *data scientists exploring **BLAS***
 
 
@@ -14,7 +12,7 @@
 ## Install 
 
 ```console
-pip install lanablas==0.1.6
+pip install lanablas==0.1.5
 ```
 
 ## Example 
