@@ -1,21 +1,21 @@
 ## LanaBLAS 🐑
 
-[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo) [![Generic badge](https://img.shields.io/badge/PyPi-Broken-red.svg)](https://shields.io/)
+[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo) [![macOS](https://img.shields.io/badge/Platform-macOS-9cf)](https://www.apple.com/macos/)
+
 
 
 **L***inear* **A**lgebra for **n***octurnal* *and* **a**dventurous *data scientists exploring **BLAS***
 
 **LanaBLAS** is a repository primarily used for testing the development of CPython extension modules with external dependencies, such as ([OpenBLAS](https://github.com/xianyi/OpenBLAS)). It's a work-in-progress memetic project aimed at having fun and learning new things.
 
-### Warning ⚠️
 
-Actually, the `0.1.6` version of the package is not working when installed via `pip` due to the OpenBlas dependencies. I am currently working on resolving the issue.
-
-
-## Install 
+## Install
 
 ```console
-pip install lanablas==0.1.6
+brew update
+brew install openblas
+export BLA_VENDOR=OpenBLAS
+pip install lanablas==0.1.7
 ```
 
 ## Example 

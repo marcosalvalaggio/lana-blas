@@ -11,19 +11,15 @@ module_extension = Extension(
     'matrix',
     sources=['lanablas/matrix.c'],
     extra_compile_args=['-std=c11'],
-    include_dirs=['openblas/include'],
+    include_dirs=['/usr/local/opt/openblas/include'],
+    library_dirs=['/usr/local/opt/openblas/lib'],
+    libraries=['openblas'],
 )
-
-
-openblas_lib_files = []
-for root, _, files in os.walk('openblas'):
-    for file in files:
-        openblas_lib_files.append(os.path.relpath(os.path.join(root, file), 'lanablas'))
 
 
 setup(
     name='lanablas',
-    version='0.1.6',
+    version='0.1.7',
     description='Extension module for matrix multiplication',
     author='Marco Salvalaggio',
     author_email='mar.salvalaggio@gmail.com',
@@ -32,10 +28,6 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=['lanablas'],
-    include_package_data=True,
-    package_data={
-        'lanablas': openblas_lib_files,  # Include OpenBLAS library files
-    },
     ext_modules=[module_extension],
     classifiers=[
         "Programming Language :: Python :: 3",
