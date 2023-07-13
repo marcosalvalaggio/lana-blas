@@ -1,6 +1,6 @@
 ## LanaBLAS 🐑
 
-[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo) [![macOS](https://img.shields.io/badge/Platform-macOS-9cf)](https://www.apple.com/macos/)
+![maintenance-status](https://img.shields.io/badge/maintenance-experimental-blue.svg) [![Tests Passing](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/your-repo) [![macOS](https://img.shields.io/badge/Platform-macOS-9cf)](https://www.apple.com/macos/)
 
 
 
